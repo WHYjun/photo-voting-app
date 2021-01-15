@@ -25,13 +25,17 @@ const FlexBox = styled.div`
   }
 `;
 
+const Button = styled.button``;
+
+const Text = styled.text``;
+
 const Tournament = () => {
   const [lineup, setLineup] = useState([]);
   const [matchup, setMatchup] = useState([]);
   const [winners, setWinners] = useState([]);
+  const [isComplete, setIsComplete] = useState(false);
 
   let photos = [];
-  let title;
 
   useEffect(() => {
     photos = Photos;
@@ -39,7 +43,7 @@ const Tournament = () => {
     setMatchup([photos[0], photos[1]]);
   }, []);
 
-  const clickEventHandler = (e) => {
+  const voteHandler = (e) => {
     const winner = e.target.currentSrc;
     if (lineup.length > 2) {
       const newLineup = lineup.slice(2);
@@ -55,35 +59,40 @@ const Tournament = () => {
         console.log(winner);
       } else {
         setLineup([...winners, winner]);
-        setMatchup([lineup[0], lineup[1]]);
         setWinners([]);
-        title = `Round of ${lineup.length}`;
+        setIsComplete(true);
       }
     }
   };
 
-  return (
-    <>
-      <h1>{title}</h1>
-      <FlexBox>
-        <div
-          className="photo-item"
-          key={matchup[0]}
-          onClick={clickEventHandler}
-        >
-          <img className="photo" src={matchup[0]} />
-        </div>
-        <div className="vs">vs</div>
-        <div
-          className="photo-item"
-          key={matchup[1]}
-          onClick={clickEventHandler}
-        >
-          <img className="photo" src={matchup[1]} />
-        </div>
-      </FlexBox>
-    </>
-  );
+  const nextRoundHandler = (_) => {
+    setMatchup([lineup[0], lineup[1]]);
+    setIsComplete(false);
+  };
+
+  if (isComplete) {
+    return (
+      <>
+        <Text>Round of {lineup.length}</Text>
+        <br />
+        <Button onClick={nextRoundHandler}>Go to the next round!</Button>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <FlexBox>
+          <div className="photo-item" key={matchup[0]} onClick={voteHandler}>
+            <img className="photo" src={matchup[0]} alt="First" />
+          </div>
+          <div className="vs">vs</div>
+          <div className="photo-item" key={matchup[1]} onClick={voteHandler}>
+            <img className="photo" src={matchup[1]} alt="Second" />
+          </div>
+        </FlexBox>
+      </>
+    );
+  }
 };
 
 export default Tournament;
