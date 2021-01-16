@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, "build")));
 
 app.get("/history", async (_, res) => {
   conn.query(
-    `SELECT u.username, h.winner FROM history AS h JOIN users AS u ON h.userid = a.userid`,
+    `SELECT u.username, h.winner FROM history AS h JOIN users AS u ON h.userid = u.userid`,
     (err, row) => {
       if (err) {
         res.send({
