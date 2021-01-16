@@ -18,6 +18,52 @@ dotenv.config();
 
 app.use(express.static(path.join(__dirname, "build")));
 
+app.post("/winner", async (req, res) => {
+  const winner = req.body.winner;
+  const username = req.body.user;
+  let userid = -1;
+  conn.query(
+    `SELECT * FROM users WHERE username = '${username}'`,
+    (err, row) => {
+      if (err) {
+        res.send({
+          status: 500,
+          redirect: "/error",
+          message: err.message,
+        });
+      } else {
+        if (row && row.length) {
+          userid = parseInt(row[0].userid);
+          const history = {
+            userid,
+            winner,
+          };
+          conn.query(`INSERT INTO history SET ?`, history, (err) => {
+            if (err) {
+              res.send({
+                status: 500,
+                redirect: "/error",
+                message: err.message,
+              });
+            } else {
+              res.send({
+                redirect: "/history",
+                message: "Successfully recorded the result",
+              });
+            }
+          });
+        } else {
+          res.send({
+            status: 500,
+            redirect: "/error",
+            message: "User doesn't exist in database",
+          });
+        }
+      }
+    }
+  );
+});
+
 app.post("/member", (req, res) => {
   const data = req.body;
   const hashedPwd = bcrypt.hashSync(data.password, parseInt(process.env.SALT));
@@ -42,26 +88,34 @@ app.post("/member", (req, res) => {
 });
 
 app.post("/signin", async (req, res) => {
-  const data = req.body;
-  const hashedPwd = bcrypt.hashSync(data.password, parseInt(process.env.SALT));
-  const users = {
-    username: data.username,
-    password: hashedPwd,
-  };
+  const username = req.body.username;
+  const password = req.body.password;
   conn.query(
-    `SELECT * FROM users WHERE username = '${users.username}' AND password = '${hashedPwd}'`,
-    (err) => {
+    `SELECT * FROM users WHERE username = '${username}'`,
+    (err, row) => {
       if (err) {
-        return res.send({
+        res.send({
           status: 500,
           redirect: "/error",
           message: err.message,
         });
       } else {
-        return res.send({
-          redirect: "/tournament",
-          message: "Successfully signed in",
-        });
+        if (
+          row &&
+          row.length &&
+          bcrypt.compareSync(password, row[0].password)
+        ) {
+          res.send({
+            redirect: "/tournament",
+            message: "Successfully signed in",
+          });
+        } else {
+          res.send({
+            status: 500,
+            redirect: "/signin",
+            message: "Incorrect username or password",
+          });
+        }
       }
     }
   );

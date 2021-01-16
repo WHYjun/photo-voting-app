@@ -13,14 +13,12 @@ const Home = () => {
   const { register, errors, handleSubmit } = useForm();
   const history = useHistory();
   const onSubmit = async (data) => {
-    console.log(data);
     await axios
       .post("/signin", {
         username: data.username,
         password: data.password,
       })
       .then((res) => {
-        console.log(res);
         if (res.data.redirect) {
           history.push({
             pathname: res.data.redirect,
@@ -72,7 +70,7 @@ const Home = () => {
       </form>
       <br />
       <p>If you don't have an account, please register to play!</p>
-      <a href="register">Register</a>
+      <a href="/#/register">Click here to register!</a>
     </SigninContainer>
   );
 };

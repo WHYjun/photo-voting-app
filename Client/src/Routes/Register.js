@@ -13,7 +13,6 @@ const Register = () => {
   const { register, errors, handleSubmit } = useForm();
   const history = useHistory();
   const onSubmit = async (data) => {
-    console.log(data);
     await axios
       .post("/member", {
         username: data.username,

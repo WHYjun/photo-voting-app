@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Photos from "../Photos";
+import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 const FlexBox = styled.div`
@@ -32,12 +33,15 @@ const Text = styled.text``;
 
 const Tournament = () => {
   const history = useHistory();
+  let user;
 
   if (history.location.state === undefined) {
     history.push("/");
   } else {
     if (history.location.state.username === undefined) {
       history.push("/");
+    } else {
+      user = history.location.state.username;
     }
   }
 
@@ -54,7 +58,7 @@ const Tournament = () => {
     setMatchup([photos[0], photos[1]]);
   }, []);
 
-  const voteHandler = (e) => {
+  const voteHandler = async (e) => {
     const winner = e.target.currentSrc;
     if (lineup.length > 2) {
       const newLineup = lineup.slice(2);
@@ -63,11 +67,10 @@ const Tournament = () => {
       setWinners([...winners, winner]);
     } else {
       if (winners.length === 0) {
-        /* 
-        1. Save the result of tournament to db
-        2. Go to the result page to show the winner
-        */
-        console.log(winner);
+        await axios
+          .post("/winner", { winner, user })
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
       } else {
         setLineup([...winners, winner]);
         setWinners([]);
