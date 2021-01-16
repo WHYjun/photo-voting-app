@@ -18,6 +18,32 @@ dotenv.config();
 
 app.use(express.static(path.join(__dirname, "build")));
 
+app.get("/history", async (_, res) => {
+  conn.query(
+    `SELECT u.username, h.winner FROM history AS h JOIN users AS u ON h.userid = a.userid`,
+    (err, row) => {
+      if (err) {
+        res.send({
+          status: 500,
+          redirect: "/error",
+          message: err.message,
+        });
+      } else {
+        if (row && row.length) {
+          const history = row.map((r) => ({
+            username: r.username,
+            winner: r.winner,
+          }));
+          res.send({
+            status: 200,
+            history,
+          });
+        }
+      }
+    }
+  );
+});
+
 app.post("/winner", async (req, res) => {
   const winner = req.body.winner;
   const username = req.body.user;
