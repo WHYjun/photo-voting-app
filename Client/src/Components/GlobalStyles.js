@@ -17,6 +17,10 @@ const globalStyles = createGlobalStyle`
     color: white;
     padding-top: 50px;
   }
+  form {
+    padding-top: 10px;
+    margin: 10px;
+  }
 `;
 
 export default globalStyles;

@@ -21,7 +21,6 @@ app.use(express.static(path.join(__dirname, "build")));
 app.post("/winner", async (req, res) => {
   const winner = req.body.winner;
   const username = req.body.user;
-  let userid = -1;
   conn.query(
     `SELECT * FROM users WHERE username = '${username}'`,
     (err, row) => {
@@ -33,7 +32,7 @@ app.post("/winner", async (req, res) => {
         });
       } else {
         if (row && row.length) {
-          userid = parseInt(row[0].userid);
+          const userid = parseInt(row[0].userid);
           const history = {
             userid,
             winner,

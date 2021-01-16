@@ -27,9 +27,18 @@ const FlexBox = styled.div`
   }
 `;
 
-const Button = styled.button``;
+const Button = styled.button`
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+`;
 
-const Text = styled.text``;
+const Text = styled.text`
+  font-size: 30px;
+  text-align: center;
+  margin: 20px auto;
+  display: block;
+`;
 
 const Tournament = () => {
   const history = useHistory();
@@ -71,6 +80,7 @@ const Tournament = () => {
           .post("/winner", { winner, user })
           .then((res) => console.log(res))
           .catch((err) => console.log(err));
+        setMatchup([winner]);
       } else {
         setLineup([...winners, winner]);
         setWinners([]);
@@ -93,19 +103,33 @@ const Tournament = () => {
       </>
     );
   } else {
-    return (
-      <>
-        <FlexBox>
-          <div className="photo-item" key={matchup[0]} onClick={voteHandler}>
-            <img className="photo" src={matchup[0]} alt="First" />
-          </div>
-          <div className="vs">vs</div>
-          <div className="photo-item" key={matchup[1]} onClick={voteHandler}>
-            <img className="photo" src={matchup[1]} alt="Second" />
-          </div>
-        </FlexBox>
-      </>
-    );
+    if (matchup.length == 1) {
+      return (
+        <>
+          <Text>Final Winner</Text>
+          <FlexBox>
+            <div className="photo-item" key={matchup[0]} onClick={voteHandler}>
+              <img className="photo" src={matchup[0]} alt="First" />
+            </div>
+          </FlexBox>
+          <Text>Check another user's history at History page</Text>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <FlexBox>
+            <div className="photo-item" key={matchup[0]} onClick={voteHandler}>
+              <img className="photo" src={matchup[0]} alt="First" />
+            </div>
+            <div className="vs">vs</div>
+            <div className="photo-item" key={matchup[1]} onClick={voteHandler}>
+              <img className="photo" src={matchup[1]} alt="Second" />
+            </div>
+          </FlexBox>
+        </>
+      );
+    }
   }
 };
 
