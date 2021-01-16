@@ -160,7 +160,7 @@ app.get("/photos", async (_, res) => {
       console.log(error);
     });
 
-  return res.send(JSON.stringify(photos));
+  return res.send(photos);
 });
 
 app.get("/*", (req, res) => {

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Photos from "../Photos";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -58,13 +57,18 @@ const Tournament = () => {
   const [matchup, setMatchup] = useState([]);
   const [winners, setWinners] = useState([]);
   const [isComplete, setIsComplete] = useState(false);
-
-  let photos = [];
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    photos = Photos;
-    setLineup(photos);
-    setMatchup([photos[0], photos[1]]);
+    const GetPhotos = async () => {
+      const result = await axios("/photos");
+      const photos = result.data.data;
+      setLineup(photos);
+      setMatchup([photos[0], photos[1]]);
+      setIsLoading(false);
+    };
+
+    GetPhotos();
   }, []);
 
   const voteHandler = async (e) => {
@@ -93,6 +97,10 @@ const Tournament = () => {
     setMatchup([lineup[0], lineup[1]]);
     setIsComplete(false);
   };
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
 
   if (isComplete) {
     return (
