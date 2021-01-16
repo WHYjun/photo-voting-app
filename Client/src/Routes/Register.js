@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 
 const RegisterContainer = styled.div`
   position: absolute;
@@ -10,13 +11,19 @@ const RegisterContainer = styled.div`
 
 const Register = () => {
   const { register, errors, handleSubmit } = useForm();
+  const history = useHistory();
   const onSubmit = async (data) => {
+    console.log(data);
     await axios
       .post("/member", {
         username: data.username,
         password: data.password,
       })
-      .then((response) => console.log(response))
+      .then((res) => {
+        if (res.data.redirect) {
+          history.push(res.data.redirect, { username: data.username });
+        }
+      })
       .catch((err) => console.log(err));
   };
 

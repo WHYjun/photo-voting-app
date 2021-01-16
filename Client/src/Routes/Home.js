@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 
 const SigninContainer = styled.div`
   position: absolute;
@@ -10,18 +11,26 @@ const SigninContainer = styled.div`
 
 const Home = () => {
   const { register, errors, handleSubmit } = useForm();
+  const history = useHistory();
   const onSubmit = async (data) => {
+    console.log(data);
     await axios
       .post("/signin", {
         username: data.username,
         password: data.password,
       })
-      .then((response) => console.log(response))
+      .then((res) => {
+        console.log(res);
+        if (res.data.redirect) {
+          history.push(res.data.redirect, { username: data.username });
+        }
+      })
       .catch((err) => console.log(err));
   };
 
   return (
     <SigninContainer>
+      <p>Welcome to Photo Voting Application</p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="username">Username: </label>
         <input
@@ -58,6 +67,9 @@ const Home = () => {
         <br />
         <button type="submit">Sign In</button>
       </form>
+      <br />
+      <p>If you don't have an account, please register to play!</p>
+      <a href="register">Register</a>
     </SigninContainer>
   );
 };
