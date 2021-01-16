@@ -44,9 +44,6 @@ const HeaderComponents = ({ location: { pathname } }) => (
       <Item currentPage={pathname === "/"}>
         <StyledLink to="/">Login</StyledLink>
       </Item>
-      <Item currentPage={pathname === "/tournament"}>
-        <StyledLink to="/tournament">Tournament</StyledLink>
-      </Item>
       <Item currentPage={pathname === "/history"}>
         <StyledLink to="/history">History</StyledLink>
       </Item>

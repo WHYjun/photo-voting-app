@@ -13,7 +13,10 @@ const Router = () => (
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/history" exact component={History} />
-        <Route path="/tournament" exact component={Tournament} />
+        <Route
+          path="/tournament"
+          render={(props) => <Tournament {...props} />}
+        />
         <Route path="/register" exact component={Register} />
         <Redirect from="*" to="/" />
       </Switch>

@@ -21,7 +21,10 @@ const Register = () => {
       })
       .then((res) => {
         if (res.data.redirect) {
-          history.push(res.data.redirect, { username: data.username });
+          history.push({
+            pathname: res.data.redirect,
+            state: { username: data.username },
+          });
         }
       })
       .catch((err) => console.log(err));

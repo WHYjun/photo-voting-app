@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Photos from "../Photos";
+import { useHistory } from "react-router-dom";
 
 const FlexBox = styled.div`
   display: flex;
@@ -30,6 +31,16 @@ const Button = styled.button``;
 const Text = styled.text``;
 
 const Tournament = () => {
+  const history = useHistory();
+
+  if (history.location.state === undefined) {
+    history.push("/");
+  } else {
+    if (history.location.state.username === undefined) {
+      history.push("/");
+    }
+  }
+
   const [lineup, setLineup] = useState([]);
   const [matchup, setMatchup] = useState([]);
   const [winners, setWinners] = useState([]);
