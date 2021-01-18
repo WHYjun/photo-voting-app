@@ -3,7 +3,6 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const axios = require("axios");
-const dotenv = require("dotenv");
 const conn = require("./connection.js");
 const bcrypt = require("bcrypt");
 
@@ -14,7 +13,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-dotenv.config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 app.use(express.static(path.join(__dirname, "build")));
 
